@@ -2,7 +2,8 @@ http://www.testingmcafeesites.com/
 
 Mozzila: 
 about:preferences
-Manual proxy config:  localhost:8080
+Manual proxy config:  localhost:9097
+                      
 
 
 Analiza trafic:
