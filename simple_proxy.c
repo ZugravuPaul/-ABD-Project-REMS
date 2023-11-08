@@ -9,25 +9,14 @@
 #define MAX_BUFFER_SIZE 4096
 #define PORT 9097
 
-char* extractTargetUrl(const char* request) {
-    char firstLine[MAX_BUFFER_SIZE];
-    sscanf(request, "%[^\n]", firstLine);
-    printf("\n%s\n",firstLine);
-
-    //size_t start, end;
-    //sscanf(firstLine, "GET %lu%*s%lu", &start, &end);
-    char* token;
-    token=strtok(firstLine, " ");
-    token=strtok(NULL, " ");
+char* extractTargetURL(const char* request) {
+    char hostname[MAX_BUFFER_SIZE];
+    sscanf(request, "%*[^\n]\n%[^\n]", &hostname);
     
-    //printf("\n%lu\n",start);
-    //printf("\n%lu\n",end);
+    char* targetUrl = malloc(strlen(hostname)+1);
+    strcpy(targetUrl, hostname+6);
 
-    char* targetUrl = malloc(strlen(token)+1);
-    //strncpy(targetUrl, firstLine + start, end - start);
-    strcpy(targetUrl, token);
-    targetUrl[strlen(token)] = '\0';
-    strncpy(targetUrl,targetUrl+7,strlen(targetUrl)-2);
+
 
     return targetUrl;
 }
@@ -39,12 +28,18 @@ void handleClientRequest(int clientSocket) {
     // Read the client's request
     ssize_t bytesRead = read(clientSocket, buffer, sizeof(buffer));
     char* request = strdup(buffer);
-    //printf("\n%s\n",request);
 
-    // Extract the target URL from the request
-    char* targetUrl = extractTargetUrl(request);
+    printf("\n%s\n",request);
+    char* targetUrl = extractTargetURL(request);
+    targetUrl[strlen(targetUrl)-1]='\0';
     printf("\n%s\n",targetUrl);
-   
+
+
+    // close(clientSocket);
+    // free(request);
+    // goto jump;
+    
+
 
     // Open a connection to the target server
     struct sockaddr_in targetAddr;
@@ -53,32 +48,34 @@ void handleClientRequest(int clientSocket) {
     targetAddr.sin_port = htons(80);
 
     struct hostent* host = gethostbyname(targetUrl);
-    if ((host=gethostbyname(buffer))==NULL){
-
+    
+    if (host==NULL){
         switch (h_errno){
-        case HOST_NOT_FOUND:
-        printf("Host not found. Error %i\n", h_errno);
-        break;
-        case TRY_AGAIN:
-        printf("Non-Authoritative. Host not found. Error %i\n", h_errno);
-        break;
-        case NO_DATA:
-        printf("Valid name, no data record of requested type. Error %i\n", h_errno);
-        break;
-        case NO_RECOVERY:
-        printf("Non recoverable error. Error %i\n", h_errno);
-        break;
+            case HOST_NOT_FOUND:
+            printf("Host not found. Error %i\n", h_errno);
+            break;
+            case TRY_AGAIN:
+            printf("Non-Authoritative. Host not found. Error %i\n", h_errno);
+            break;
+            case NO_DATA:
+            printf("Valid name, no data record of requested type. Error %i\n", h_errno);
+            break;
+            case NO_RECOVERY:
+            printf("Non recoverable error. Error %i\n", h_errno);
+            break;
     
         }
+        close(clientSocket);
+        free(request);
+        free(targetUrl);
+        return;
     }
-
-    else
-        printf("\nIP address of %s is: ", host->h_name );
     
-    printf("%s",host->h_name);
-    printf("%s",host->h_addr_list[0]);
     
     memcpy(&targetAddr.sin_addr, host->h_addr_list[0], host->h_length);
+    char target_ip[INET_ADDRSTRLEN];
+    inet_ntop(AF_INET, &targetAddr.sin_addr, target_ip, sizeof(target_ip));  //debug hostname and ip address
+    printf("\nHostName of %s is: %s\n", host->h_name ,target_ip);
 
     int targetSocket = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -95,6 +92,9 @@ void handleClientRequest(int clientSocket) {
     memset(buffer, 0, sizeof(buffer));
     while ((bytesRead = read(targetSocket, buffer, sizeof(buffer))) > 0) {
         write(clientSocket, buffer, bytesRead);
+
+        //buffer[(int)bytesRead+1]='\0';
+        printf("%.*s", (int)bytesRead, buffer); 
         memset(buffer, 0, sizeof(buffer));
     }
 
@@ -104,6 +104,8 @@ void handleClientRequest(int clientSocket) {
 
     free(request);
     free(targetUrl);
+
+    
 }
 
 int main() {
@@ -117,8 +119,8 @@ int main() {
     memset(&serverAddr, 0, sizeof(serverAddr));
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(PORT);
-    //serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);           //<<<<<<<========================proxy address
-    serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
+    serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);           //<<<<<<<========================proxy address
+    //serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
 
 
     if (bind(serverSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) == -1) {
@@ -152,7 +154,7 @@ int main() {
             perror("Failed to accept client connection");
             continue;
         }
-        
+        else {
          pid_t pid = fork();
          if (pid == -1) {
              perror("Failed to fork");
@@ -165,9 +167,10 @@ int main() {
              handleClientRequest(clientSocket);
             return 0;
         }
-
+        
         //Parent process
         close(clientSocket);
+        }
     }
 
     close(serverSocket);
