@@ -1,14 +1,20 @@
 http://www.testingmcafeesites.com/
+http://testphp.vulnweb.com/login.php
+
+===========extract redirects js
+var urls = document.getElementsByTagName('a');
+
+for (url in urls) {
+    console.log ( urls[url].href );
+}
+===========
 
 Mozzila: 
 about:preferences
-Manual proxy config:  localhost:9097
-                      
-
+Manual proxy config:  localhost:9097                   
 
 Analiza trafic:
 https://www.tcpdump.org/pcap.html
-
 libpcap 
 
 Http proxy:
@@ -27,4 +33,3 @@ Cerințe:
 - O listă de domenii/IP-uri și să le prindă doar pe alea  
 - Grupare după sesiune HTTP (cookie based)  
 - Suport pentru HTTPS*  
-TODO: descărcați BurpSuite și vedeți cum funcționează
