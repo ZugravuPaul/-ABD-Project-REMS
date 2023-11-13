@@ -25,7 +25,7 @@ void handleClientRequest(int clientSocket) {
     char buffer[MAX_BUFFER_SIZE];
     memset(buffer, 0, sizeof(buffer));
 
-    // Read the client's request
+    // read request
     ssize_t bytesRead = read(clientSocket, buffer, sizeof(buffer));
     char* request = strdup(buffer);
 
@@ -85,10 +85,10 @@ void handleClientRequest(int clientSocket) {
 }
     connect(targetSocket, (struct sockaddr*)&targetAddr, sizeof(targetAddr));
 
-    // Forward the client's request to the target server
+    //forward the client's request
     write(targetSocket, request, strlen(request));
 
-    // Forward the target server's response to the client
+    //forward the target server's response 
     memset(buffer, 0, sizeof(buffer));
     while ((bytesRead = read(targetSocket, buffer, sizeof(buffer))) > 0) {
         write(clientSocket, buffer, bytesRead);
@@ -98,7 +98,6 @@ void handleClientRequest(int clientSocket) {
         memset(buffer, 0, sizeof(buffer));
     }
 
-    // Close the sockets
     close(targetSocket);
     close(clientSocket);
 
@@ -128,7 +127,7 @@ int main() {
         return 1;
     }
 
-    // Print the bound IP address
+    // server bound IP address
     struct sockaddr_in bound_addr;
     socklen_t bound_len = sizeof(bound_addr);
     if (getsockname(serverSocket, (struct sockaddr *)&bound_addr, &bound_len) == 0) {
@@ -168,7 +167,6 @@ int main() {
             return 0;
         }
         
-        //Parent process
         close(clientSocket);
         }
     }
