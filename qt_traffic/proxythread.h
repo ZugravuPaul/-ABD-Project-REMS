@@ -31,7 +31,8 @@ public slots:
     void onClientDisconnected();
 
 signals:
-    void updateUI(const QString &requestData, qint64 connectionId);
+    void updateUI_TableHosts(const QString &requestData, qint64 connectionId, const QString& host);
+    void insertResponse(const QString &responseData, qint64 connectionId);
 };
 
 

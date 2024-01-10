@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1700</width>
+    <height>1000</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,22 +19,12 @@
      <rect>
       <x>10</x>
       <y>0</y>
-      <width>261</width>
+      <width>771</width>
       <height>20</height>
      </rect>
     </property>
     <property name="text">
      <string/>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="textEdit">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>70</y>
-      <width>781</width>
-      <height>351</height>
-     </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="btnStartStop">
@@ -50,13 +40,94 @@
      <string>PushButton</string>
     </property>
    </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>349</x>
+      <y>450</y>
+      <width>1871</width>
+      <height>371</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>1000</number>
+     </property>
+     <item>
+      <widget class="QTextEdit" name="textEditReqResp">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>419</y>
+      <width>1251</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout"/>
+   </widget>
+   <widget class="QTableWidget" name="tableWidgetDetails">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>100</y>
+      <width>1251</width>
+      <height>321</height>
+     </rect>
+    </property>
+    <column>
+     <property name="text">
+      <string>Host</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Method</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>URL</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QTableWidget" name="tableWidgetHosts">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>341</width>
+      <height>721</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="textEditFilter">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>60</y>
+      <width>831</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1700</width>
      <height>22</height>
     </rect>
    </property>
