@@ -5,12 +5,7 @@ http://www.testingmcafeesites.com/
 http://testphp.vulnweb.com/login.php
 
 Mozzila: 
-about:preferences
 Manual proxy config:  localhost:9097                   
-
-Analiza trafic:
-https://www.tcpdump.org/pcap.html
-
 =====ProjectPlan=====
 
 - testare folosind firefox  
